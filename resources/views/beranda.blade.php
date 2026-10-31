@@ -13,6 +13,9 @@
     @if (auth()->user()->peran === 'pelapor')
         <p><a href="{{ route('laporan.create') }}">Buat laporan baru</a></p>
     @endif
+    <p><a href="{{ route('laporan.index') }}">
+        {{ auth()->user()->peran === 'pelapor' ? 'Laporan saya' : 'Daftar laporan' }}
+    </a></p>
     <form method="POST" action="{{ route('logout') }}">
         @csrf
         <button type="submit">Logout</button>

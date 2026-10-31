@@ -15,7 +15,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/', fn () => view('beranda'))->name('beranda');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/laporan/{laporan}/bukti', [LaporanController::class, 'bukti'])->name('laporan.bukti');
-
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('/laporan/{laporan}', [LaporanController::class, 'show'])->name('laporan.show')->whereNumber('laporan');
+    Route::get('/laporan/{laporan}/edit', [LaporanController::class, 'edit'])->name('laporan.edit')->whereNumber('laporan');
+    Route::put('/laporan/{laporan}', [LaporanController::class, 'update'])->name('laporan.update')->whereNumber('laporan');
+    
     // Hanya pelapor
     Route::middleware('peran:pelapor')->group(function () {
         Route::get('/laporan/buat', [LaporanController::class, 'create'])->name('laporan.create');
