@@ -65,7 +65,7 @@ class LaporanController extends Controller
     }
     public function show(Laporan $laporan) {
         Gate::authorize('view', $laporan); 
-        $laporan->load(['pelapor', 'distribusi.sekolah']);
+        $laporan->load(['pelapor', 'distribusi.sekolah', 'penerusan']);
         return view('laporan.show', ['laporan' => $laporan]);
     }
     public function edit(Laporan $laporan) {

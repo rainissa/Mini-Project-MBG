@@ -67,4 +67,12 @@ class LaporanPolicy
     {
         return false;
     }
+    // Pemantau dan koordinator boleh melihat penerusan; pencatatan dilakukan koordinator
+public function catatPenerusan(User $user, Laporan $laporan): bool {
+    return $user->peran === 'koordinator';
+}
+
+public function tinjau(User $user, Laporan $laporan): bool {
+    return $user->peran === 'pemantau';
+}
 }

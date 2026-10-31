@@ -50,6 +50,97 @@
     @can('update', $laporan)
         <p style="margin-top: 20px;"><a href="{{ route('laporan.edit', $laporan) }}">Edit laporan</a></p>
     @endcan
+    @if ($errors->any())
+        <p style="color:#b91c1c;">{{ $errors->first() }}</p>
+    @endif
+
+    @php $peran = auth()->user()->peran; @endphp
+
+    {{-- Pelapor: kirim ulang --}}
+    @if ($peran === 'pelapor' && $laporan->status === 'Perlu Dilengkapi')
+        <form method="POST" action="{{ route('laporan.kirimUlang', $laporan) }}" style="margin-top:16px;">
+            @csrf
+            <button type="submit">Kirim ulang laporan</button>
+        </form>
+    @endif
+
+    {{-- Pemantau --}}
+    @if ($peran === 'pemantau')
+        @if ($laporan->status === 'Dikirim')
+            <form method="POST" action="{{ route('laporan.tinjau', $laporan) }}" style="margin-top:16px;">
+                @csrf
+                <label>Catatan (opsional)<br>
+                    <textarea name="catatan" rows="2" style="width:100%"></textarea>
+                </label>
+                <button type="submit">Tandai sudah ditinjau</button>
+            </form>
+        @endif
+
+        @if (in_array($laporan->status, ['Dikirim', 'Ditinjau']))
+            <form method="POST" action="{{ route('laporan.mintaLengkapi', $laporan) }}" style="margin-top:16px;">
+                @csrf
+                <label>Catatan untuk pelapor (wajib)<br>
+                    <textarea name="catatan" rows="2" style="width:100%" required></textarea>
+                </label>
+                <button type="submit">Minta dilengkapi</button>
+            </form>
+        @endif
+
+        @if ($laporan->status === 'Ditinjau')
+            <form method="POST" action="{{ route('laporan.tandaiDiteruskan', $laporan) }}" style="margin-top:16px;">
+                @csrf
+                <label>Catatan (opsional)<br>
+                    <textarea name="catatan" rows="2" style="width:100%"></textarea>
+                </label>
+                <button type="submit">Tandai untuk diteruskan</button>
+            </form>
+        @endif
+    @endif
+
+    {{-- Koordinator --}}
+    @if ($peran === 'koordinator')
+        @if ($laporan->status === 'Ditandai untuk Diteruskan')
+            <form method="POST" action="{{ route('laporan.catatPenerusan', $laporan) }}" style="margin-top:16px;">
+                @csrf
+                <h4>Catat penerusan informasi</h4>
+                <label>Jenis penerima<br>
+                    <select name="jenis_laporan" required>
+                        <option value="sekolah">Sekolah</option>
+                        <option value="sppg">SPPG</option>
+                        <option value="fasilitas_kesehatan">Fasilitas kesehatan</option>
+                        <option value="lainnya">Lainnya</option>
+                    </select>
+                </label><br>
+                <label>Nama penerima<br>
+                    <input type="text" name="nama_penerima" required style="width:100%">
+                </label><br>
+                <label>Waktu diteruskan<br>
+                    <input type="datetime-local" name="waktu_diteruskan" required>
+                </label><br>
+                <label>Catatan (opsional)<br>
+                    <textarea name="catatan_penerusan" rows="2" style="width:100%"></textarea>
+                </label>
+                <button type="submit">Simpan penerusan</button>
+            </form>
+        @endif
+
+        @if (in_array($laporan->status, ['Ditinjau', 'Telah Diteruskan']))
+            <form method="POST" action="{{ route('laporan.selesai', $laporan) }}" style="margin-top:16px;">
+                @csrf
+                <button type="submit">Tutup laporan (Selesai)</button>
+            </form>
+        @endif
+    @endif
+
+    {{-- Riwayat penerusan --}}
+    @if ($laporan->penerusan->isNotEmpty() && $peran !== 'pelapor')
+        <h4 style="margin-top:20px;">Riwayat penerusan</h4>
+        <ul>
+            @foreach ($laporan->penerusan as $p)
+                <li>{{ $p->waktu_diteruskan->format('d-m-Y H:i') }} - {{ $p->nama_penerima }} ({{ $p->jenis_laporan }})</li>
+            @endforeach
+        </ul>
+    @endif
 </div>
 </body>
 </html>
