@@ -7,7 +7,12 @@
 <body style="font-family: sans-serif; padding: 24px;">
     <h2>Beranda</h2>
     <p>Halo, {{ auth()->user()->nama }} (peran: {{ auth()->user()->peran }})</p>
-
+    @if (session('sukses'))
+        <p style="color: green;">{{ session('sukses') }}</p>
+    @endif
+    @if (auth()->user()->peran === 'pelapor')
+        <p><a href="{{ route('laporan.create') }}">Buat laporan baru</a></p>
+    @endif
     <form method="POST" action="{{ route('logout') }}">
         @csrf
         <button type="submit">Logout</button>

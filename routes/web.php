@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LaporanController;
 use Illuminate\Support\Facades\Route;
 
 // Guest
@@ -16,7 +17,9 @@ Route::middleware('auth')->group(function () {
 
     // Hanya pelapor
     Route::middleware('peran:pelapor')->group(function () {
-        Route::get('/uji/pelapor', fn () => 'Halaman khusus Pelapor');
+        Route::get('/laporan/buat', [LaporanController::class, 'create'])->name('laporan.create');
+        Route::post('/laporan', [LaporanController::class, 'store'])->name('laporan.store');
+        Route::get('/sekolah/{sekolah}/distribusi', [LaporanController::class, 'distribusiPerSekolah'])->name('sekolah.distribusi');
     });
 
     // Hanya pemantau
