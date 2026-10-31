@@ -25,6 +25,22 @@ class SimpanLaporanRequest extends FormRequest
             'deskripsi'=> ['required', 'string', 'min:10'],
             'waktu_kejadian'=> ['required', 'date', 'before_or_equal:now'],
             'jumlah_terdampak'=> ['required', 'integer', 'min:1', 'max:1000'],
+            'bukti'=> ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
+        ];
+    }
+    public function messages(): array {
+        return [
+            'waktu_kejadian.before_or_equal'=> 'Waktu kejadian tidak boleh di masa depan.',
+            'bukti.mimes'=> 'File bukti harus berformat JPG, JPEG, PNG, atau PDF.',
+            'bukti.max'=> 'Ukuran file bukti maksimal 2 MB.',
+            'bukti.file'=> 'Bukti harus berupa file.',
+            'bukti.uploaded'=> 'File gagal diunggah. Pastikan ukurannya tidak lebih dari 2 MB.',
+            'judul.required'=> 'Judul wajib diisi.',
+            'deskripsi.required'=> 'Deskripsi wajib diisi.',
+            'deskripsi.min'=> 'Deskripsi minimal 10 karakter.',
+            'waktu_kejadian.required'=> 'Waktu kejadian wajib diisi.',
+            'jumlah_terdampak.required'=> 'Jumlah terdampak wajib diisi.',
+            'jumlah_terdampak.min'=> 'Jumlah terdampak minimal 1.',
         ];
     }
     public function after(): array {

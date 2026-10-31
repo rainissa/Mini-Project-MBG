@@ -14,6 +14,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/', fn () => view('beranda'))->name('beranda');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/laporan/{laporan}/bukti', [LaporanController::class, 'bukti'])->name('laporan.bukti');
 
     // Hanya pelapor
     Route::middleware('peran:pelapor')->group(function () {

@@ -17,7 +17,7 @@
 <body>
 <div class="kartu">
     <h2>Buat Laporan</h2>
-    <form method="POST" action="{{ route('laporan.store') }}">
+    <form method="POST" action="{{ route('laporan.store') }}" enctype="multipart/form-data">
         @csrf
 
         <label>Sekolah
@@ -57,6 +57,10 @@
         </label>
         @error('jumlah_terdampak') <div class="error">{{ $message }}</div> @enderror
 
+        <label>Bukti pendukung (opsional, JPG/PNG/PDF, maks. 2 MB)
+            <input type="file" name="bukti" accept=".jpg,.jpeg,.png,.pdf">
+        </label>
+        @error('bukti') <div class="error">{{ $message }}</div> @enderror
         <button type="submit">Kirim Laporan</button>
         <a href="{{ route('beranda') }}">Batal</a>
     </form>
