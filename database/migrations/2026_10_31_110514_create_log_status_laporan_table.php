@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('laporan_id')->constrained('laporan')->restrictedOnDelete();
             $table->string('status_lama', 50)->nullable();
-            $table->string('string_baru', 50);
+            $table->string('status_baru', 50);
             $table->foreignId('diubah_oleh')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamp('created_at')->useCurrent();
         });

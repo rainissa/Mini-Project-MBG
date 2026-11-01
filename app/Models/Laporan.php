@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Observers\LaporanObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[ObservedBy([LaporanObserver::class])]
 class Laporan extends Model
 {
     protected $table = 'laporan';

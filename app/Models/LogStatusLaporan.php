@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class LogStatusLaporan extends Model
 {
     protected $table = 'log_status_laporan';
-    public $timestamp = false;
+    public $timestamps = false;
     protected $fillable = [
         'laporan_id',
         'status_lama',
-        'status_baru',
+        'status_baru', 
         'diubah_oleh',
     ];
 
