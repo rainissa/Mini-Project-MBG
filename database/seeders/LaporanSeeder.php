@@ -36,5 +36,16 @@ class LaporanSeeder extends Seeder
                 'catatan_pemantau' => $catatan,
             ]);
         }
+        for ($i = 1; $i <= 6; $i++) {
+            Laporan::create([
+                'pelapor_id'       => 4,
+                'distribusi_id'    => 3,
+                'judul'            => "Keluhan tambahan nomor {$i}",
+                'deskripsi'        => 'Data demo untuk menguji pagination dan filter.',
+                'waktu_kejadian'   => '2026-10-20 14:00:00',
+                'jumlah_terdampak' => $i,
+                'status'           => $i % 2 === 0 ? 'Ditinjau' : 'Dikirim',
+            ]);
+        }
     }
 }

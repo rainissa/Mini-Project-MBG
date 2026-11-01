@@ -19,6 +19,9 @@ class DistribusiMakananSeeder extends Seeder
             [2, '2026-10-27', 'Nasi, tempe orek, capcay'],
             [3, '2026-10-21', 'Nasi, daging semur, tumis buncis'],
             [3, '2026-10-28', 'Nasi, ayam kecap, sayur lodeh'],
+            [1, '2026-10-29', 'Nasi, soto ayam, kerupuk'],
+            [2, '2026-10-30', 'Nasi, pepes ikan, lalapan'],
+            [3, '2026-10-30', 'Nasi, rendang, sayur nangka'],
         ];
 
         foreach ($data as [$sekolahId, $tanggal, $menu]) {
