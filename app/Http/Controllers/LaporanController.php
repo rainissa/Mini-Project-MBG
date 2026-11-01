@@ -11,6 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\UbahLaporanRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\Request;
 
 class LaporanController extends Controller
 {
@@ -51,16 +52,46 @@ class LaporanController extends Controller
         abort_unless($laporan->bukti && Storage::exists($laporan->bukti), 404);
         return Storage::response($laporan->bukti);
     }
-    public function index() {
+    public function index(Request $request) {
         Gate::authorize('viewAny', Laporan::class);
         $user = auth()->user();
+        // Validasi parameter filter supaya nilai aneh tidak diproses
+        $filter = $request->validate([
+            'q'         => ['nullable', 'string', 'max:100'],
+            'status'    => ['nullable', 'in:Dikirim,Perlu Dilengkapi,Ditinjau,Ditandai untuk Diteruskan,Telah Diteruskan,Selesai'],
+            'sekolah'   => ['nullable', 'integer', 'exists:sekolah,id'],
+            'dari'      => ['nullable', 'date'],
+            'sampai'    => ['nullable', 'date', 'after_or_equal:dari'],
+        ]);
         $query = Laporan::with(['pelapor', 'distribusi.sekolah'])->latest();
         // Pelapor hanya melihat laporan miliknya
         if ($user->peran === 'pelapor') {
             $query->where('pelapor_id', $user->id);
         }
+        if (! empty($filter['q'])) {
+            $kata = $filter['q'];
+            $query->where(function ($q) use ($kata) {
+                $q->where('judul', 'like', "%{$kata}%")
+                ->orWhere('deskripsi', 'like', "%{$kata}%");
+            });
+        }
+        if (! empty($filter['status'])) {
+            $query->where('status', $filter['status']);
+        }
+        // Filter sekolah hanya berlaku untuk pemantau dan koordinator
+        if (! empty($filter['sekolah']) && $user->peran !== 'pelapor') {
+            $query->whereHas('distribusi', fn ($d) => $d->where('sekolah_id', $filter['sekolah']));
+        }
+        if (! empty($filter['dari'])) {
+            $query->whereDate('waktu_kejadian', '>=', $filter['dari']);
+        }
+        if (! empty($filter['sampai'])) {
+            $query->whereDate('waktu_kejadian', '<=', $filter['sampai']);
+        }
         return view('laporan.index', [
-            'daftarLaporan' => $query->paginate(10),
+            'daftarLaporan' => $query->paginate(3)->withQueryString(),
+            'daftarSekolah' => Sekolah::orderBy('nama')->get(),
+            'daftarStatus'  => ['Dikirim', 'Perlu Dilengkapi', 'Ditinjau', 'Ditandai untuk Diteruskan', 'Telah Diteruskan', 'Selesai'],
         ]);
     }
     public function show(Laporan $laporan) {
