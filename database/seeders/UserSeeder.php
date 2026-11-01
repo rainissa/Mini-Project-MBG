@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $akun = [
-            ['nama'=> 'Bu Dini', 'email'=> 'koordinator@mbg.tezt', 'peran'=> 'koordinator'],
+            ['nama'=> 'Bu Dini', 'email'=> 'koordinator@mbg.test', 'peran'=> 'koordinator'],
             ['nama'=> 'Pak Nanang', 'email'=> 'pemantau@mbg.test', 'peran'=> 'pemantau'],
             ['nama'=> 'Bu Juwita', 'email'=> 'pelapor1@mbg.test', 'peran'=> 'pelapor'],
             ['nama'=> 'Pak Rais', 'email'=> 'pelapor2@mbg.test', 'peran'=> 'pelapor'],
