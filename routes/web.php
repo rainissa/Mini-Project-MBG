@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\ProsesLaporanController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RekapController;
 
 // Guest
 Route::middleware('guest')->group(function () {
@@ -41,7 +42,7 @@ Route::middleware('auth')->group(function () {
 
     // Pemantau atau koordinator
     Route::middleware('peran:pemantau,koordinator')->group(function () {
-        Route::get('/uji/rekap', fn () => 'Halaman rekap (Pemantau dan Koordinator)');
+        Route::get('/rekap', [RekapController::class, 'index'])->name('rekap.index');
     });
 
     // Hanya koordinator

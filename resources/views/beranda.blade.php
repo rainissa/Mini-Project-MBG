@@ -16,6 +16,9 @@
     <p><a href="{{ route('laporan.index') }}">
         {{ auth()->user()->peran === 'pelapor' ? 'Laporan saya' : 'Daftar laporan' }}
     </a></p>
+    @if (in_array(auth()->user()->peran, ['pemantau', 'koordinator']))
+        <p><a href="{{ route('rekap.index') }}">Rekap laporan</a></p>
+    @endif
     <form method="POST" action="{{ route('logout') }}">
         @csrf
         <button type="submit">Logout</button>
